@@ -47,6 +47,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+},{
+    timestamps:true
 })
 
 
@@ -88,7 +90,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 }
 
 // Hash the plain text password before saving
-userSchema.pre('save', async function (next) {
+userSchema.pre('hash', async function (next) {
     const user = this
 
     if (user.isModified('password')) {
@@ -99,16 +101,15 @@ userSchema.pre('save', async function (next) {
 })
 //deletes an user  
 //delete is an action on the mongoose Model itself
-userSchema.pre('delete',async function(next){
+userSchema.pre('remove',async function(next){
+    //deletes all the tasks associated with the owner
     const user=this
     await Task.deleteMany({'owner':req.user._id})
     next()
-    
-
 })
 
 userSchema.post('save',function() {
-    console.log('user has been saved')
+    console.log('user has been saved');
 })
 //creates a virtual field referencing the Tasks in the database
 userSchema.virtual('tasks',{
