@@ -1,0 +1,6 @@
+sudo systemctl start mongod
+echo "started monogdb"
+postman & /usr/local/bin/robomongo/robo3t-1.4.3-linux-x86_64-48f7dfd/bin/robo3t
+echo "started robo3t"
+echo "started postman"
+
