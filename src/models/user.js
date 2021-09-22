@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const Task=require('../models/task')
+const Task=require('../models/task').default
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -73,24 +73,25 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
+//when the function has to be applied on the model 
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
-
+    console.log(user)
     if (!user) {
-        throw new Error('Unable to login')
+        throw new Error('Unable to find user')
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
 
     if (!isMatch) {
-        throw new Error('Unable to login')
+        throw new Error('Password is invalid')
     }
 
     return user
 }
 
-// Hash the plain text password before saving
-userSchema.pre('hash', async function (next) {
+// Hash the plain text password before saving thus it changes the user password in the req - res lifecycle
+userSchema.pre('save', async function (next) {
     const user = this
 
     if (user.isModified('password')) {

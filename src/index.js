@@ -30,16 +30,3 @@ app.use(taskRouter)
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
 })
-
-const main =async () => {
-    // const task= await Task.findById("611d41cf83c50f728c8c071e");
-    // await task.populate('owner').execPopulate();
-    // console.log(task);
-    
-    //allows us to find all the tasks of an user using the virtual property
-    const user=await User.findById("611d416f83c50f728c8c0714");
-    await user.populate('tasks').execPopulate();
-    console.log(user.tasks)
-
-}
-main()

@@ -5,9 +5,8 @@ const router = new express.Router()
 
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
-
     try {
-        await user.hash()//hashes the password if it is in text format
+        await user.save()//hashes the password if it is in text format
         const token = await user.generateAuthToken()
         res.status(201).send({ user, token })
     } catch (e) {
@@ -21,7 +20,8 @@ router.post('/users/login', async (req, res) => {
         const token = await user.generateAuthToken()
         res.send({ user, token })
     } catch (e) {
-        res.status(400).send()
+       console.log(e);
+        res.status(400).send(e)
     }
 })
 
