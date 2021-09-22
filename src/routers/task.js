@@ -23,12 +23,18 @@ router.post('/tasks',auth,async (req, res) => {
 router.get('/tasks',auth, async (req, res) => {
     try {
         const match={}
+        const sort={}
         const id=req.user._id
         const tasks = await Task.find({'owner':id})
 
         if (req.query.completed) {
             match.completed = req.query.completed === 'true'
-            console.log(match)
+        }
+
+        //sorting the user data 
+        if(req.query.sortBy) {
+            const parts=req.query.split(":")
+            sort[parts[0]]=sort[parts[1]]==="desc"?-1:1;
         }
 
         await req.user.populate({
