@@ -23,6 +23,7 @@ const port = process.env.PORT || 3000
 // })
 
 app.use(express.json())
+//Make sure the logger middleware is before the route handlers 
 app.use(logger)
 app.use(userRouter)
 app.use(taskRouter)
